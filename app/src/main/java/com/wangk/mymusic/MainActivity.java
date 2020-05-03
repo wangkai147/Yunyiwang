@@ -2,13 +2,12 @@ package com.wangk.mymusic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.wangk.mymusic.Base.BaseActivity;
-import com.wangk.mymusic.Home.HomeActivity;
+import com.wangk.mymusic.Login.LoginActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,8 +31,12 @@ public class MainActivity extends BaseActivity {
         Glide.with(this).load(R.drawable.mainbackground).into(mainImage);
 
         //3秒后跳转到HomeActivity
-        setIntent();
-
+        new Timer().schedule(new TimerTask(){
+            public void run(){
+                //TODO  todo something here
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        }, taskTime);
     }
 
     @Override
@@ -54,13 +57,5 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initData() {
         taskTime = 3000;
-    }
-    private void setIntent(){
-        new Timer().schedule(new TimerTask(){
-            public void run(){
-                //TODO  todo something here
-                startActivity(new Intent(MainActivity.this, HomeActivity.class));
-            }
-        }, taskTime);
     }
 }

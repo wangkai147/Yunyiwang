@@ -31,4 +31,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation files('libs/glide-full-4.7.0.jar')
+    implementation("com.squareup.okhttp3:okhttp:4.1.0")
 }
