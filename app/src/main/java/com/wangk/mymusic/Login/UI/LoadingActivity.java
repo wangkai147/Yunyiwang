@@ -11,10 +11,15 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.wangk.mymusic.Base.BaseActivity;
+import com.wangk.mymusic.Home.HomeActivity;
+import com.wangk.mymusic.Login.Bean.Login;
 import com.wangk.mymusic.R;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,8 +35,7 @@ public class LoadingActivity extends BaseActivity {
     private ImageView loadingImageView;
     private String phone;
     private String password;
-
-    private String responseData;
+    private String timestamp;
 
     private OkHttpClient client = new OkHttpClient();
 /*    OkHttpClient client = new OkHttpClient()
@@ -79,8 +83,8 @@ public class LoadingActivity extends BaseActivity {
         Bundle bundle = intent.getExtras();
         phone = bundle.getString("phone");
         password = bundle.getString("password");
+        timestamp = (System.currentTimeMillis() / 1000)+"";
         Toast.makeText(LoadingActivity.this, phone+password, Toast.LENGTH_SHORT).show();
-        responseData = null;
     }
 
     private class AsyncTaskRefresh extends AsyncTask<String, Integer, String> {
@@ -91,6 +95,7 @@ public class LoadingActivity extends BaseActivity {
                 RequestBody formBody = new FormBody.Builder()
                         .add("phone",phone)
                         .add("password",password)
+                        .add("timestamp",timestamp)
                         .build();
 
                 //推荐歌单
@@ -114,7 +119,14 @@ public class LoadingActivity extends BaseActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Toast.makeText(LoadingActivity.this, result, Toast.LENGTH_SHORT).show();
+            if(result!=null){
+                Intent intent = new Intent(LoadingActivity.this, HomeActivity.class);
+                intent.putExtra("result",result);
+                startActivity(intent);
+            } else {
+                Toast.makeText(LoadingActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoadingActivity.this,LoginActivity.class));
+            }
         }
     }
 }

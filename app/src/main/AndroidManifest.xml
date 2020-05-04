@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Login.UI.LoadingActivity"></activity>
-        <activity android:name=".Login.LoginActivity" />
+        <activity android:name=".Login.UI.LoginActivity" />
         <activity android:name=".Base.BaseActivity" />
         <activity android:name=".Home.HomeActivity" />
         <activity android:name=".MainActivity">

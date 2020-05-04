@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.wangk.mymusic.Base.BaseActivity;
-import com.wangk.mymusic.Login.LoginActivity;
+import com.wangk.mymusic.Login.UI.LoginActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;

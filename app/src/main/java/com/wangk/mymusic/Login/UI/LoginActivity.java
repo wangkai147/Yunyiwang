@@ -1,4 +1,4 @@
-package com.wangk.mymusic.Login;
+package com.wangk.mymusic.Login.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.wangk.mymusic.Base.BaseActivity;
 import com.wangk.mymusic.Home.HomeActivity;
-import com.wangk.mymusic.Login.UI.LoadingActivity;
 import com.wangk.mymusic.R;
 
 public class LoginActivity extends BaseActivity {
