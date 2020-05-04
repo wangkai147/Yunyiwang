@@ -35,6 +35,7 @@ public class MainActivity extends BaseActivity {
             public void run(){
                 //TODO  todo something here
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
             }
         }, taskTime);
     }
@@ -47,10 +48,9 @@ public class MainActivity extends BaseActivity {
     //初始化View and Date
     @Override
     protected void initView(){
+        //全屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //改变状态栏颜色
-        //setTranslucent(MainActivity.this);
         mainImage = findViewById(R.id.mainImage);
     }
 

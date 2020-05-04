@@ -31,6 +31,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(setLayout());
         initView();
+        initData();
         setListener();
     }
 
@@ -48,24 +49,28 @@ public class LoginActivity extends BaseActivity {
         passwordEditText = bindView(R.id.passwordEditText);
         Glide.with(this).load(R.drawable.login).into(loginImageView);
     }
+    //在点击登录后调用
     @Override
     protected void initData() {
-        phone = phoneEditText.getText().toString();
-        password = passwordEditText.getText().toString();
-        bundle = new Bundle();
-        bundle.putString("phone",phone);
-        bundle.putString("password",password);
-
-        intent = new Intent(LoginActivity.this, LoadingActivity.class);
-        intent.putExtras(bundle);//放置数据
+        phoneEditText.setText(null);
+        passwordEditText.setText(null);
     }
     private void setListener(){
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(LoginActivity.this,"1", Toast.LENGTH_SHORT).show();
-                initData();
-                startActivity(intent);
+                phone = phoneEditText.getText().toString();
+                password = passwordEditText.getText().toString();
+                bundle = new Bundle();
+                bundle.putString("phone",phone);
+                bundle.putString("password",password);
+
+                intent = new Intent(LoginActivity.this, LoadingActivity.class);
+                intent.putExtras(bundle);//放置数据
+
+                if(phone.length()!=0&&password.length()!=0) startActivity(intent);
+                else Toast.makeText(LoginActivity.this,"账号或密码为空", Toast.LENGTH_SHORT).show();
             }
         });
         intoButton.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +92,8 @@ public class LoginActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
-                System.exit(0);
+                //System.exit(0);
+                finish();
             }
             return true;
         }
