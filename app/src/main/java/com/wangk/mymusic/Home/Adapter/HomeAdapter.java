@@ -10,16 +10,22 @@ import java.util.List;
 public class HomeAdapter extends FragmentPagerAdapter {
 
     List<Fragment> fragmentList;
+    List<String> titleList;
 
-    public HomeAdapter(@NonNull FragmentManager fm, int behavior, List<Fragment> fragmentList) {
+    public HomeAdapter(@NonNull FragmentManager fm, int behavior, List<Fragment> fragmentList,List<String> titleList) {
         super(fm, behavior);
         this.fragmentList = fragmentList;
+        this.titleList = titleList;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
         return fragmentList.get(position);
+    }
+
+    public CharSequence getPageTitle(int position){
+        return titleList.get(position);
     }
 
     @Override

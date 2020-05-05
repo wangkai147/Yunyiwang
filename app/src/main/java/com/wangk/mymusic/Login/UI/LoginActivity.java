@@ -41,7 +41,7 @@ public class LoginActivity extends BaseActivity {
     }
     @Override
     protected void initView() {
-        setTranslucent(this);
+        //setTranslucent(this);
         loginImageView = bindView(R.id.loginImageView);
         loginButton = bindView(R.id.loginButton);
         intoButton = bindView(R.id.intoButton);

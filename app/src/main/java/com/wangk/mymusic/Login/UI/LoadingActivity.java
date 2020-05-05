@@ -62,7 +62,7 @@ public class LoadingActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        setTranslucent(this);
+        //setTranslucent(this);
         loadingImageView = bindView(R.id.loadingImageView);
         Glide.with(this).load(R.drawable.loading).into(loadingImageView);
     }
