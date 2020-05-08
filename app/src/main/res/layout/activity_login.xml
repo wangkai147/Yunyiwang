@@ -20,6 +20,7 @@
         app:layout_constraintVertical_bias="0.08" />
 
     <EditText
+        android:textAlignment="center"
         android:hint="请输入手机号"
         android:id="@+id/phoneEditText"
         android:layout_width="230dp"
@@ -35,6 +36,7 @@
         app:layout_constraintVertical_bias="0.45" />
 
     <EditText
+        android:textAlignment="center"
         android:hint="请输入密码"
         android:id="@+id/passwordEditText"
         android:layout_width="230dp"
@@ -51,26 +53,26 @@
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:background="@drawable/buttonstyle"
-        android:text="Button"
+        android:text="登  录"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.754" />
 
     <Button
         android:id="@+id/intoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:background="@drawable/buttonstyle"
-        android:text="Button"
+        android:text="随便看看"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.866" />

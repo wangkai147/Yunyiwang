@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
@@ -37,7 +39,7 @@ public class HomeActivity extends BaseActivity {
     private List<Fragment> fragmentList;
     private FragmentManager fragmentManager;
 
-    private View view;
+    private ConstraintLayout barBackground;
 
 
     private TabLayout homeTabLayout;
@@ -62,14 +64,11 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        //setColor(HomeActivity.this, Color.parseColor("#FFD33A32"));
-        //setTranslucent(this);
-/*        view = bindView(R.id.view);
-        view.setBackgroundColor(Color.parseColor("#FFD33A32"));*/
 
         //获取TabLayout与ViewPager
         homeViewPager = bindView(R.id.homeViewPager);
         homeTabLayout = bindView(R.id.homeTabLayout);
+        barBackground = bindView(R.id.barBackground);
 
         //创建Fragment
         myFragment = new MyFragment();
@@ -93,7 +92,43 @@ public class HomeActivity extends BaseActivity {
 
         homeViewPager.setAdapter(homeAdapter);
 
-        //Viewpager的监听（这个监听是为TabLayout专门设计的）
+        homeViewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
+
+            int item = homeViewPager.getCurrentItem();
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                /*
+                 * 完全静止 state=0
+                 * 手指按下 state=1
+                 * 手指抬起 state=2
+                 * */
+                if(state==1) item = homeViewPager.getCurrentItem();
+            }
+
+            //当滚动当前页面时 positionOffset偏移量 positionOffsetPixels像素偏移量
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //position的值始终等于屏幕最左侧暴露出来的view的position
+                if(item==1&&position==0){
+                    barBackground.getBackground().setAlpha((int)(positionOffset*255));
+                }else if(item==0&&position==0){
+                    barBackground.getBackground().setAlpha((int)(positionOffset*255));
+                }
+            }
+
+
+            //当选择新页面时，将调用此方法
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                //position的值等于即将切换过去的页面的下标
+
+            }
+        });
+
+/*      //Viewpager的监听（这个监听是为TabLayout专门设计的）
         homeViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(homeTabLayout));
 
         //TabLayout接受监听
@@ -112,7 +147,7 @@ public class HomeActivity extends BaseActivity {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        });
+        });*/
     }
 
     @Override

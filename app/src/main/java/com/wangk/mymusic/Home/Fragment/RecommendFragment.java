@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.wangk.mymusic.Login.Bean.Login;
 import com.wangk.mymusic.R;
+import com.zhouwei.mzbanner.MZBannerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +34,8 @@ public class RecommendFragment extends Fragment {
 
     private View rootView;
     private Context mContext;
+
+    private MZBannerView mzBanner;
 
     public RecommendFragment() {
         // Required empty public constructor
@@ -84,8 +87,15 @@ public class RecommendFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_recommend, container, false);
+        initView(rootView);
 
 
         return rootView;
     }
+
+    private void initView(View view){
+        mzBanner = view.findViewById(R.id.mzBanner);
+    }
+
+
 }

@@ -32,4 +32,5 @@ public class HomeAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return fragmentList.size();
     }
+
 }
