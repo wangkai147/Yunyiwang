@@ -1,7 +1,6 @@
 package com.wangk.mymusic.Home.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -14,17 +13,20 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.wangk.mymusic.Home.Bean.BannerRoot;
+import com.wangk.mymusic.Home.Bean.Banners;
 import com.wangk.mymusic.Home.Fragment.Adapter.ImageNetAdapter;
 import com.wangk.mymusic.Home.Fragment.Bean.DataBean;
-import com.wangk.mymusic.Home.HomeActivity;
-import com.wangk.mymusic.Login.Bean.Login;
-import com.wangk.mymusic.Login.UI.LoadingActivity;
-import com.wangk.mymusic.Login.UI.LoginActivity;
+
 import com.youth.banner.Banner;
 
 import com.wangk.mymusic.R;
+import com.youth.banner.indicator.CircleIndicator;
+import com.youth.banner.util.BannerUtils;
 
 import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -41,6 +43,8 @@ public class RecommendFragment extends Fragment {
 
     private Banner banner;
     private BannerRoot bannerRoot;
+    //private List<String> imageUrl = new ArrayList<>();
+    private List<DataBean> dataBeans = new ArrayList<>();
 
     private OkHttpClient client = new OkHttpClient();
 
@@ -91,12 +95,14 @@ public class RecommendFragment extends Fragment {
                 Gson gson = new Gson();
                 //login存储登录数据
                 bannerRoot = gson.fromJson(result, BannerRoot.class);
-                Toast.makeText(getActivity(),"获取成功",Toast.LENGTH_SHORT).show();
+                //获取ImageUrl保存到list中
+                List<Banners> banners = bannerRoot.getBanners();
+                for(int i = 0;i<banners.size();i++){
+                    //imageUrl.add(banners.get(i).getPic());
+                    dataBeans.add(new DataBean(banners.get(i).getPic(),null,1));
+                }
 
-                //获取ImageUrl
-
-                //保存到list中
-
+                Toast.makeText(getActivity(),dataBeans.get(0).getImageUrl(),Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(),"获取失败",Toast.LENGTH_SHORT).show();
             }
@@ -111,15 +117,11 @@ public class RecommendFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_recommend, container, false);
         initView(rootView);
         //网络请求获取banner图片数据
-
-        //url保存入集合
-
-        //设置适配器
-        ImageNetAdapter adapter = new ImageNetAdapter(DataBean.getImageData());
-        banner.setAdapter(adapter)
-        .start();
-
         new AsyncTaskRefresh().execute();//异步请求
+
+        //设置适配器设置样式
+        ImageNetAdapter adapter = new ImageNetAdapter(dataBeans);
+        banner.setAdapter(adapter).start();
 
 /*        //设置指示器
         banner.setIndicator(new CircleIndicator(mContext));*/
@@ -129,6 +131,8 @@ public class RecommendFragment extends Fragment {
 
     private void initView(View view){
         banner = view.findViewById(R.id.banner);
+        banner.setBannerRound(BannerUtils.dp2px(5));
+        banner.setBannerGalleryMZ(20);
     }
     private void initData(){
 

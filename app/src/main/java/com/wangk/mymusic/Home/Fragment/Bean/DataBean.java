@@ -44,7 +44,7 @@ public class DataBean {
     }
 
 
-    public static List<DataBean> list;
+/*    public static List<DataBean> list;
     public static List<DataBean> getImageData() {
         list = new ArrayList<>();
         list.add(new DataBean("https://img.zcool.cn/community/011ad05e27a173a801216518a5c505.jpg", null, 1));
@@ -55,7 +55,7 @@ public class DataBean {
         list.add(new DataBean("https://img.zcool.cn/community/01085d5e27a174a80120a8958791c4.jpg", null, 1));
         list.add(new DataBean("https://img.zcool.cn/community/01f8735e27a174a8012165188aa959.jpg", null, 1));
         return list;
-    }
+    }*/
 
     public static List<String> getColors(int size) {
         List<String> list = new ArrayList<>();
