@@ -69,7 +69,11 @@ public class LoginActivity extends BaseActivity {
                 intent = new Intent(LoginActivity.this, LoadingActivity.class);
                 intent.putExtras(bundle);//放置数据
 
-                if(phone.length()!=0&&password.length()!=0) startActivity(intent);
+                //节省网络请求时间
+                if(phone.length()!=0&&password.length()!=0) {
+                    startActivity(intent);
+                    finish();
+                }
                 else Toast.makeText(LoginActivity.this,"账号或密码为空", Toast.LENGTH_SHORT).show();
             }
         });
@@ -77,6 +81,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                finish();
             }
         });
     }

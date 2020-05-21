@@ -73,6 +73,7 @@ public class LoadingActivity extends BaseActivity {
         Bundle bundle = intent.getExtras();
         phone = bundle.getString("phone");
         password = bundle.getString("password");
+        //时间戳
         timestamp = (System.currentTimeMillis() / 1000)+"";
         Toast.makeText(LoadingActivity.this, phone+password, Toast.LENGTH_SHORT).show();
     }
@@ -113,9 +114,11 @@ public class LoadingActivity extends BaseActivity {
                 Intent intent = new Intent(LoadingActivity.this, HomeActivity.class);
                 intent.putExtra("result",result);
                 startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(LoadingActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(LoadingActivity.this,LoginActivity.class));
+                finish();
             }
         }
     }

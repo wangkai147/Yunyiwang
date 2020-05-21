@@ -1,12 +1,8 @@
 package com.wangk.mymusic.Home;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -15,7 +11,6 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
 import com.wangk.mymusic.Base.BaseActivity;
 import com.wangk.mymusic.Home.Adapter.HomeAdapter;
 import com.wangk.mymusic.Home.Fragment.MyFragment;
@@ -87,11 +82,11 @@ public class HomeActivity extends BaseActivity {
         fragmentManager = getSupportFragmentManager();
         homeAdapter = new HomeAdapter(fragmentManager,0,fragmentList,titleList);
 
-        //TabLayout与ViewPager绑定
-        homeTabLayout.setupWithViewPager(homeViewPager,false);
-
         homeViewPager.setAdapter(homeAdapter);
 
+
+        //TabLayout与ViewPager绑定
+        homeTabLayout.setupWithViewPager(homeViewPager,false);
         homeViewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
 
             int item = homeViewPager.getCurrentItem();
@@ -117,7 +112,6 @@ public class HomeActivity extends BaseActivity {
                     barBackground.getBackground().setAlpha((int)(positionOffset*255));
                 }
             }
-
 
             //当选择新页面时，将调用此方法
             @Override
@@ -156,8 +150,10 @@ public class HomeActivity extends BaseActivity {
         String result = intent.getStringExtra("result");
         if(result!=null){
             Bundle bundle = new Bundle();
-            bundle.putString("result",result);//这里的titles就是我们要传的值
+            bundle.putString("result",result);
+            //向Fragment传递参数
             myFragment.setArguments(bundle);
+            //myFragment = MyFragment.newInstance(result,null);
             recommendFragment.setArguments(bundle);
         }
     }

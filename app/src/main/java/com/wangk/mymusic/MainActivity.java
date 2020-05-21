@@ -35,6 +35,7 @@ public class MainActivity extends BaseActivity {
             public void run(){
                 //TODO  todo something here
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                //跳转后销毁activity
                 finish();
             }
         }, taskTime);
