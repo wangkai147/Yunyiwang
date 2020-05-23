@@ -1,6 +1,7 @@
 package com.wangk.mymusic.Home.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -11,22 +12,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.wangk.mymusic.Home.Bean.BannerRoot;
 import com.wangk.mymusic.Home.Bean.Banners;
 import com.wangk.mymusic.Home.Fragment.Adapter.ImageNetAdapter;
 import com.wangk.mymusic.Home.Fragment.Bean.DataBean;
 
+import com.wangk.mymusic.Home.UI.SongpageActivity;
+import com.wangk.mymusic.MainActivity;
+import com.wangk.mymusic.PlayPage.PlayActivity;
 import com.youth.banner.Banner;
 
 import com.wangk.mymusic.R;
 import com.youth.banner.indicator.CircleIndicator;
+import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.util.BannerUtils;
 
 import java.io.IOException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -44,6 +55,7 @@ public class RecommendFragment extends Fragment {
     private Banner banner;
     private BannerRoot bannerRoot;
     //private List<String> imageUrl = new ArrayList<>();
+    private List<Banners> banners;
     private List<DataBean> dataBeans = new ArrayList<>();
 
     private OkHttpClient client = new OkHttpClient();
@@ -96,7 +108,7 @@ public class RecommendFragment extends Fragment {
                 //login存储登录数据
                 bannerRoot = gson.fromJson(result, BannerRoot.class);
                 //获取ImageUrl保存到list中
-                List<Banners> banners = bannerRoot.getBanners();
+                banners = bannerRoot.getBanners();
                 for(int i = 0;i<banners.size();i++){
                     //imageUrl.add(banners.get(i).getPic());
                     dataBeans.add(new DataBean(banners.get(i).getPic(),null,1));
@@ -109,7 +121,6 @@ public class RecommendFragment extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -117,14 +128,31 @@ public class RecommendFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_recommend, container, false);
         initView(rootView);
         //网络请求获取banner图片数据
-        new AsyncTaskRefresh().execute();//异步请求
+        Executor exec = new ThreadPoolExecutor(15, 200, 10,
+                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+        new AsyncTaskRefresh().executeOnExecutor(exec);//异步请求
 
         //设置适配器设置样式
         ImageNetAdapter adapter = new ImageNetAdapter(dataBeans);
+
         banner.setAdapter(adapter).start();
 
-/*        //设置指示器
-        banner.setIndicator(new CircleIndicator(mContext));*/
+        banner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(Object data, int position) {
+                /* //获取当前item对应数据
+                banners.get(position);*/
+                Snackbar.make(banner, "((DataBean) data).title"+position, Snackbar.LENGTH_SHORT).show();
+
+                //判断是不是单曲
+                if(banners.get(position).getSong()!=null){
+                    //跳转到播放页
+                    Intent intent = new Intent(getActivity(), PlayActivity.class);
+                    intent.putExtra("banner",banners.get(position));
+                    getActivity().startActivity(intent);
+                }
+            }
+        });
 
         return rootView;
     }
@@ -133,6 +161,9 @@ public class RecommendFragment extends Fragment {
         banner = view.findViewById(R.id.banner);
         banner.setBannerRound(BannerUtils.dp2px(5));
         banner.setBannerGalleryMZ(20);
+
+/*        //设置指示器
+        banner.setIndicator(new CircleIndicator(getActivity()));*/
     }
     private void initData(){
 

@@ -2,24 +2,23 @@
  * Copyright 2020 bejson.com
  */
 package com.wangk.mymusic.Home.Bean;
-import java.io.Serializable;
 import java.util.List;
 
 /**
- * Auto-generated: 2020-05-20 20:10:1
+ * Auto-generated: 2020-05-22 19:36:17
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class BannerRoot implements Serializable {
+public class SongRoot {
 
-    private List<Banners> banners;
+    private List<Data> data;
     private int code;
-    public void setBanners(List<Banners> banners) {
-        this.banners = banners;
+    public void setData(List<Data> data) {
+        this.data = data;
     }
-    public List<Banners> getBanners() {
-        return banners;
+    public List<Data> getData() {
+        return data;
     }
 
     public void setCode(int code) {

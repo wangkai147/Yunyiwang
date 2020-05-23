@@ -3,13 +3,15 @@
  */
 package com.wangk.mymusic.Home.Bean;
 
+import java.io.Serializable;
+
 /**
  * Auto-generated: 2020-05-20 20:10:1
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class Privilege {
+public class Privilege implements Serializable {
 
     private long id;
     private int fee;

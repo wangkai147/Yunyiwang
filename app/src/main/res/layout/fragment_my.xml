@@ -2,20 +2,24 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/ic_launcher_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Home.Fragment.MyFragment">
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/myFragmentNestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <!-- TODO: Update blank fragment layout -->
+
+
             <ImageView
+                android:scaleType="center"
+                android:id="@+id/userBackgroundImage"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -23,9 +27,18 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
 
+            <!--用户头像-->
+            <ImageView
+                android:id="@+id/userIcon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="90dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
             
-
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
