@@ -43,4 +43,5 @@ dependencies {
 
     implementation 'com.youth.banner:banner:2.0.8'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
 }

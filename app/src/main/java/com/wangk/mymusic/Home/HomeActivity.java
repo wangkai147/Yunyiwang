@@ -121,27 +121,6 @@ public class HomeActivity extends BaseActivity {
 
             }
         });
-
-/*      //Viewpager的监听（这个监听是为TabLayout专门设计的）
-        homeViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(homeTabLayout));
-
-        //TabLayout接受监听
-        homeTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });*/
     }
 
     @Override

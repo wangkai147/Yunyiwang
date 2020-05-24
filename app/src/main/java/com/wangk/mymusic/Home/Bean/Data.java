@@ -3,13 +3,15 @@
  */
 package com.wangk.mymusic.Home.Bean;
 
+import java.io.Serializable;
+
 /**
  * Auto-generated: 2020-05-22 19:36:17
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class Data {
+public class Data implements Serializable {
 
     private long id;
     private String url;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.wangk.mymusic.Login.Bean.Login;
 import com.wangk.mymusic.R;
@@ -47,6 +49,12 @@ public class MyFragment extends Fragment {
     private ImageView userIcon;
 
     private OkHttpClient client = new OkHttpClient();
+
+
+/*
+    //activity的布局
+    private ConstraintLayout barBackground;
+*/
 
     public MyFragment() {
         // Required empty public constructor
@@ -166,9 +174,13 @@ public class MyFragment extends Fragment {
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY > oldScrollY) {
                     Log.e("=====", "下滑");
+                    //设置透明度
+/*                    barBackground = getActivity().findViewById(R.id.barBackground);
+                    barBackground.getBackground().setAlpha(255);*/
                 }
                 if (scrollY < oldScrollY) {
                     Log.e("=====", "上滑");
+
                 }
 
                 if (scrollY == 0) {

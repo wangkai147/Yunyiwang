@@ -2,6 +2,7 @@
  * Copyright 2020 bejson.com
  */
 package com.wangk.mymusic.Home.Bean;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class SongRoot {
+public class SongRoot implements Serializable {
 
     private List<Data> data;
     private int code;
