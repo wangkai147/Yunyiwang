@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.wangk.mymusic.Base.BaseActivity;
 import com.wangk.mymusic.Home.Bean.SongRoot;
@@ -19,7 +21,8 @@ import com.wangk.mymusic.Service.MusicService;
 
 public class PlayActivity extends BaseActivity {
 
-    private SongRoot songRoot;
+    private SongRoot songRoot = null;
+    private long id = 0;
 
     private MyConnection conn;
     private MusicService.MyBinder musicControl;
@@ -82,17 +85,28 @@ public class PlayActivity extends BaseActivity {
     protected void initData() {
         //获取上个页面的songRoot
         songRoot = (SongRoot)getIntent().getSerializableExtra("songRoot");
+        id = getIntent().getLongExtra("mId",0);
+        Toast.makeText(this,songRoot+"",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,id+"",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(setLayout());
-        //获取banners信息
-        initData();
 
         Intent intent = new Intent(PlayActivity.this, MusicService.class);
-        intent.putExtra("url",songRoot.getData().get(0).getUrl());
+        String urt = null;
+
+        for(int i=0;i<songRoot.getData().size();i++){
+            if(songRoot.getData().get(i).getId()==id){
+                //i为data下标
+                urt = songRoot.getData().get(i).getUrl();
+            }
+        }
+
+        intent.putExtra("url",urt);
+
         conn = new PlayActivity.MyConnection();
         //使用混合的方法开启服务，
         startService(intent);

@@ -20,10 +20,7 @@ import com.wangk.mymusic.Home.Bean.Banners;
 import com.wangk.mymusic.Home.Bean.SongRoot;
 import com.wangk.mymusic.Home.Fragment.Adapter.ImageNetAdapter;
 import com.wangk.mymusic.Home.Fragment.Bean.DataBean;
-
-import com.wangk.mymusic.Login.UI.LoadingActivity;
 import com.wangk.mymusic.PlayPage.PlayActivity;
-import com.wangk.mymusic.Service.MusicService;
 import com.youth.banner.Banner;
 
 import com.wangk.mymusic.R;
@@ -54,6 +51,8 @@ public class RecommendFragment extends Fragment {
     private List<Banners> banners;
     private Banners bannerData;
     private List<DataBean> dataBeans = new ArrayList<>();
+    private String idUrl = null;
+    private long mId;
 
     private OkHttpClient client = new OkHttpClient();
 
@@ -108,12 +107,12 @@ public class RecommendFragment extends Fragment {
                 banners = bannerRoot.getBanners();
                 for(int i = 0;i<banners.size();i++){
                     //imageUrl.add(banners.get(i).getPic());
+                    //遍历bannerImg用于显示
                     dataBeans.add(new DataBean(bannerRoot.getBanners().get(i).getPic(),null,1));
                 }
-
-                Toast.makeText(getActivity(),"获取banners成功",Toast.LENGTH_SHORT).show();
+                Log.e("","获取banners成功");
             } else {
-                Toast.makeText(getActivity(),"获取banners失败",Toast.LENGTH_SHORT).show();
+                Log.e("","获取banners失败");
             }
         }
     }
@@ -123,14 +122,8 @@ public class RecommendFragment extends Fragment {
         protected String doInBackground(String... strings) {
             //添加线程任务(网络请求)
             try {
-                //当前banner对应的单曲id
-                long a = bannerData.getSong().getId();
-                //时间戳
-                String timestamp = (System.currentTimeMillis() / 1000)+"";
-
                 RequestBody formBody = new FormBody.Builder()
-                        .add("id",a+"")
-                        .add("timestamp",timestamp)
+                        .add("id",idUrl)
                         .build();
 
                 //推荐歌单
@@ -139,7 +132,10 @@ public class RecommendFragment extends Fragment {
                         .post(formBody)
                         .build();
 
-                Response response = client.newCall(request).execute();
+                //每次都是新的请求
+                OkHttpClient client1 = new OkHttpClient();
+
+                Response response = client1.newCall(request).execute();
                 if (response.isSuccessful()) {
                     return response.body().string();
                 }
@@ -158,12 +154,12 @@ public class RecommendFragment extends Fragment {
                 //解析json
                 Gson gson = new Gson();
                 SongRoot songRoot = gson.fromJson(result, SongRoot.class);
-
                 //跳转到播放页
                 Intent intent = new Intent(getActivity(), PlayActivity.class);
                 //传动当前banner数据
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("songRoot",songRoot);
+                bundle.putLong("mId",mId);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 } else {
@@ -186,13 +182,23 @@ public class RecommendFragment extends Fragment {
 
         banner.setAdapter(adapter).start();
 
+        //banner事件监听
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(Object data, int position) {
-                //判断是不是单曲
+                //判断banner对应类型是不是单曲
                 if(banners.get(position).getSong()!=null){
-                    //获取当前点击的banner对应数据
-                    bannerData = banners.get(position);
+                    //遍历banners获取所有MusicId以组成Url
+                    idUrl = "";
+                    for(int i=0;i<banners.size();i++){
+                        if(banners.get(i).getSong()!=null)
+                            idUrl = idUrl + banners.get(i).getSong().getId()+",";
+                    }
+                    idUrl = idUrl.substring(0,idUrl.length()-1);
+
+                    //获取当前点击的banner对应MusicId
+                    mId = banners.get(position).getSong().getId();
+                    //bannerData = banners.get(position);
                     //进行网络请求获取歌曲url
                     //根据id获取歌曲url
                     new AsyncTaskRefresh1().execute();//同步请求
@@ -202,7 +208,6 @@ public class RecommendFragment extends Fragment {
                 }
             }
         });
-
         return rootView;
     }
 

@@ -7,6 +7,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.wangk.mymusic.PlayingApplycation;
+
 import java.io.IOException;
 
 public class MusicService extends Service {
@@ -23,37 +25,48 @@ public class MusicService extends Service {
         //当执行完了onCreate后，就会执行onBind把操作歌曲的方法返回
         return new MyBinder();
     }
+    private void playMusic(PlayingApplycation playingApplycation){
+        //如果为空就new一个
+        player = new MediaPlayer();
+        try {
+            player.setDataSource(url);
+            //设置application标志当前正在播放音乐url
+            playingApplycation.setPlayingUrl(url);
+
+            //异步准备
+            player.prepareAsync();
+            //添加准备好的监听
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    //如果准备好了，就会进行这个方法
+                    mp.start();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         url = intent.getStringExtra("url");
         Log.i("TAG", "Service接收到：" + url);
-
+        PlayingApplycation playingApplycation = (PlayingApplycation) this.getApplication();
         //没有播放源
         if (player == null) {
-            //如果为空就new一个
-            player = new MediaPlayer();
-            try {
-                player.setDataSource(url);
-                //异步准备
-                player.prepareAsync();
-                //添加准备好的监听
-                player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        //如果准备好了，就会进行这个方法
-                        mp.start();
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            playMusic(playingApplycation);
         } else {
             //判断是否播放的是同一歌曲
-            if (player.isPlaying()) {
-                player.pause();
+            if(url.equals(playingApplycation.getPlayingUrl())){
+
             } else {
-                player.start();
+                if (player.isPlaying()) {
+                    player.pause();
+                }
+                player.release();//释放后重新创建
+                player = null;
+                playMusic(playingApplycation);
             }
         }
         return super.onStartCommand(intent, flags, startId);
