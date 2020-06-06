@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     tools:context=".Home.Fragment.MyFragment">
     <androidx.core.widget.NestedScrollView
         android:id="@+id/myFragmentNestedScrollView"
@@ -52,12 +54,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="700dp"
+                <!--在线获得我的歌单-->
+
+                <ListView
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/listViewCover"
+                    android:layout_width="match_parent"
+                    android:layout_height="700dp" />
+
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

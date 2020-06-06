@@ -41,6 +41,8 @@ public class MusicService extends Service {
                 public void onPrepared(MediaPlayer mp) {
                     //如果准备好了，就会进行这个方法
                     mp.start();
+
+
                 }
             });
         } catch (IOException e) {
@@ -84,6 +86,9 @@ public class MusicService extends Service {
             return player.isPlaying();
         }
 
+        public MediaPlayer getPlayer(){
+            return player;
+        }
         //播放或暂停歌曲
         public void play() {
             if (player.isPlaying()) {

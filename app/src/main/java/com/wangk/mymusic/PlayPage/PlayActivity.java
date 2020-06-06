@@ -1,9 +1,13 @@
 package com.wangk.mymusic.PlayPage;
 
+import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -14,10 +18,32 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import com.wangk.mymusic.Base.BaseActivity;
 import com.wangk.mymusic.Home.Bean.SongRoot;
+
+import com.wangk.mymusic.PlayPage.Bean.LrcRootBean;
 import com.wangk.mymusic.R;
 import com.wangk.mymusic.Service.MusicService;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import static com.wangk.mymusic.Home.UI.PermisionUtils.verifyStoragePermissions;
 
 public class PlayActivity extends BaseActivity {
 
@@ -29,7 +55,10 @@ public class PlayActivity extends BaseActivity {
 
     private Button playBtn;
     private SeekBar seekBar;
+    private LrcRootBean lrcRootBean;
     private static final int UPDATE_PROGRESS = 0;
+    private OkHttpClient client = new OkHttpClient();
+
 
     @Override
     protected int setLayout() {
@@ -85,15 +114,63 @@ public class PlayActivity extends BaseActivity {
     protected void initData() {
         //获取上个页面的songRoot
         songRoot = (SongRoot)getIntent().getSerializableExtra("songRoot");
+        //歌曲id用于获取歌词
         id = getIntent().getLongExtra("mId",0);
-        Toast.makeText(this,songRoot+"",Toast.LENGTH_SHORT).show();
-        Toast.makeText(this,id+"",Toast.LENGTH_SHORT).show();
+        Executor exec = new ThreadPoolExecutor(15, 200, 10,
+                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+        new AsyncTaskRefresh().executeOnExecutor(exec);
+    }
+
+    //网络请求获取用户详情
+    private class AsyncTaskRefresh extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            //添加线程任务(网络请求)
+            try {
+                RequestBody formBody = new FormBody.Builder()
+                        .add("id",id+"")
+                        .build();
+
+                //推荐歌单
+                Request request = new Request.Builder()
+                        .url("https://vast-coast-94601.herokuapp.com/lyric")
+                        .post(formBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    return response.body().string();
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+            //可调用publishProgress（）显示进度, 之后将执行onProgressUpdate（）
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if(result!=null){
+                //解析json
+                Gson gson = new Gson();
+                lrcRootBean = gson.fromJson(result, LrcRootBean.class);
+
+            } else {
+
+            }
+        }
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(setLayout());
+
+        initData();
 
         Intent intent = new Intent(PlayActivity.this, MusicService.class);
         String urt = null;

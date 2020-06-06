@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -19,7 +21,11 @@ import com.wangk.mymusic.Home.Bean.BannerRoot;
 import com.wangk.mymusic.Home.Bean.Banners;
 import com.wangk.mymusic.Home.Bean.SongRoot;
 import com.wangk.mymusic.Home.Fragment.Adapter.ImageNetAdapter;
+import com.wangk.mymusic.Home.Fragment.Adapter.ReMusicPageAdapter;
 import com.wangk.mymusic.Home.Fragment.Bean.DataBean;
+import com.wangk.mymusic.Home.Fragment.Bean.RMusicRootBean;
+import com.wangk.mymusic.Home.Fragment.Bean.Result;
+import com.wangk.mymusic.Home.UI.CoverActivity;
 import com.wangk.mymusic.PlayPage.PlayActivity;
 import com.youth.banner.Banner;
 
@@ -49,10 +55,13 @@ public class RecommendFragment extends Fragment {
     private BannerRoot bannerRoot;
     //private List<String> imageUrl = new ArrayList<>();
     private List<Banners> banners;
-    private Banners bannerData;
     private List<DataBean> dataBeans = new ArrayList<>();
     private String idUrl = null;
     private long mId;
+
+    private ListView reMusicListView;
+    private List<Result> mData = null;
+    private ReMusicPageAdapter mAdapter = null;
 
     private OkHttpClient client = new OkHttpClient();
 
@@ -66,7 +75,7 @@ public class RecommendFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.mContext = getActivity();
     }
     private class AsyncTaskRefresh extends AsyncTask<String, Integer, String> {
         @Override
@@ -168,6 +177,58 @@ public class RecommendFragment extends Fragment {
         }
     }
 
+    //每日推荐歌单
+    private class AsyncTaskRefresh2 extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            //添加线程任务(网络请求)
+            try {
+                RequestBody formBody = new FormBody.Builder()
+                        .build();
+
+                //推荐歌单
+                Request request = new Request.Builder()
+                        .url("https://vast-coast-94601.herokuapp.com/personalized")
+                        .build();
+
+                //每次都是新的请求
+                OkHttpClient client1 = new OkHttpClient();
+
+                Response response = client1.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    return response.body().string();
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+            //可调用publishProgress（）显示进度, 之后将执行onProgressUpdate（）
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if(result!=null){
+                //解析json
+                Gson gson = new Gson();
+                RMusicRootBean rMusicRootBean = gson.fromJson(result, RMusicRootBean.class);
+
+                Log.e("",rMusicRootBean.getResult().size()+"");
+
+                mData = rMusicRootBean.getResult();
+
+                //listView显示
+                mAdapter = new ReMusicPageAdapter((ArrayList<Result>) mData, getActivity());
+                reMusicListView.setAdapter(mAdapter);
+
+            } else {
+
+            }
+        }
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -176,6 +237,9 @@ public class RecommendFragment extends Fragment {
         initView(rootView);
         //网络请求获取banner图片数据
         new AsyncTaskRefresh().execute();//同步请求
+
+        //网络请求获取推荐歌单
+        new AsyncTaskRefresh2().execute();
 
         //设置适配器设置样式
         ImageNetAdapter adapter = new ImageNetAdapter(dataBeans);
@@ -187,7 +251,7 @@ public class RecommendFragment extends Fragment {
             @Override
             public void OnBannerClick(Object data, int position) {
                 //判断banner对应类型是不是单曲
-                if(banners.get(position).getSong()!=null){
+                if(banners.get(position).getSong()!=null&&!banners.get(position).getTypeTitle().equals("VIP专属")){
                     //遍历banners获取所有MusicId以组成Url
                     idUrl = "";
                     for(int i=0;i<banners.size();i++){
@@ -215,6 +279,22 @@ public class RecommendFragment extends Fragment {
         banner = view.findViewById(R.id.banner);
         banner.setBannerRound(BannerUtils.dp2px(5));
         banner.setBannerGalleryMZ(20);
+
+        reMusicListView = view.findViewById(R.id.reListView);
+
+        reMusicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //根据id获取此item对应的歌单id
+                Log.e("",mData.get(position).getId()+"");
+                //跳转到详情页
+                Intent intent = new Intent(getActivity(), CoverActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong("coverId",mData.get(position).getId());
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
 /*        //设置指示器
         banner.setIndicator(new CircleIndicator(getActivity()));*/
